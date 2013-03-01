@@ -18,3 +18,55 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 ## Example Developer Packet
 
 ![Developer Model](R3 - Developer Model.jpg)
+
+```diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
+index 51a4d70..243c8ab 100644
+--- a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
++++ b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
+@@ -36,6 +36,7 @@
+ import java.util.Enumeration;
+ import java.util.Iterator;
+ import java.util.Vector;
++
+ import javax.swing.JMenuItem;
+ import javax.swing.JOptionPane;
+ import javax.swing.JPopupMenu;
+@@ -45,12 +46,20 @@
+ import javax.swing.tree.DefaultMutableTreeNode;
+ import javax.swing.tree.TreePath;
+ import javax.swing.tree.TreeSelectionModel;
++
+ import org.cesilko.rachota.core.Day;
+ import org.cesilko.rachota.core.Plan;
+ import org.cesilko.rachota.core.Settings;
+ import org.cesilko.rachota.core.Task;
+ import org.cesilko.rachota.core.Translator;
+-import org.cesilko.rachota.core.filters.*;
++import org.cesilko.rachota.core.filters.AbstractTaskFilter;
++import org.cesilko.rachota.core.filters.DescriptionFilter;
++import org.cesilko.rachota.core.filters.DurationFilter;
++import org.cesilko.rachota.core.filters.IdleFilter;
++import org.cesilko.rachota.core.filters.KeywordFilter;
++import org.cesilko.rachota.core.filters.PriorityFilter;
++import org.cesilko.rachota.core.filters.PrivateFilter;
++import org.cesilko.rachota.core.filters.StateFilter;
+ 
+ /** Panel providing history view on tasks from the past.
+  * @author Jiri Kovalsky
+@@ -242,6 +251,7 @@
+                     tbTasks.getColumnModel().getColumn(i).setHeaderValue(filteredTasksTableModel.getColumnName(i));
+             }
+         });
++        
+     }
+     
+     /** Returns font that should be used for all widgets in this component
+@@ -1605,6 +1615,7 @@
+         txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+         historyChart.setDays(getDays());
+         updateTotalTime();
++        filterTasks();
+     }
+     
+     public class MouseActionAdapter extends MouseAdapter implements ActionListener {
+```
