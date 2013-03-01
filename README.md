@@ -18,10 +18,10 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 ## Example Developer Packet (R3)
 
 ![Developer Model](R3 - Developer Model.jpg)
-Developer's model as she/he sees it
+A drawing or description of the program elements (e.g., methods, classes, fields) that the developer needed to understand in order to complete his/her task
 
 ![Transcript in Excel](R3 - Transcript in Excel.PNG)
-Transcript of developer's actions when working
+Transcript of developer's actions when working (partial transcript shown here, entire transcript available in repository)
 
     diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
     index 51a4d70..243c8ab 100644
@@ -74,4 +74,4 @@ Transcript of developer's actions when working
          
          public class MouseActionAdapter extends MouseAdapter implements ActionListener {
 
-Patch containing developers' changes
+A patch containing developers' changes
