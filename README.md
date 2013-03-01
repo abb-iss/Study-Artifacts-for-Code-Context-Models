@@ -3,7 +3,7 @@
 Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twelve developers performing one of three change tasks using the Eclipse IDE for Java Developers. Here we publish the data collected during this study.  Our data consists of twelve transcripts of developer actions transcribed by hand from the approximately two hours of video collected from each participant. It also includes the patches they submitted as solutions and a drawing/description of the program elements and relationships necessary to complete their task. Further details on the study setup can be found in our paper (preprint coming soon). 
 
 --
-### Downloading
+### Download
 To download our data, including transcripts, developer models, developer patches, and source code snapshots use Git to download this repository or [click on this link](https://github.com/abb-iss/Study-Artifacts-for-Code-Context-Models/archive/master.zip) for a .zip version.
 
 --
