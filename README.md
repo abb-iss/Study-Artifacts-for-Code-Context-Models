@@ -5,8 +5,10 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 ### **Task:** [#116 New task in History->Tasks not visible](http://sourceforge.net/p/rachota/bugs/116/)
 **Project:** [Rachota](http://sourceforge.net/projects/rachota/), **Version:** 2.4, **Subjects:** R1, R2, R3, R4
 
+
 ### **Task:** [Save Failed - Data Loss Occurs - ID: 3420227](http://sourceforge.net/tracker/?func=detail&aid=3420227&group_id=7118&atid=107118)
 **Project:** [Freemind](http://sourceforge.net/projects/freemind/), **Version:** 0.9.0 RC 15, **Subjects:** F1, F2, F3, F4
+
 
 ### **Task:** [#30 list position lost after sleep](http://sourceforge.net/p/jpwsafe/bugs/30/)
 **Project:** [JPasswordSafe](http://sourceforge.net/projects/jpwsafe/), **Version:** 2.4, **Subjects:** J1, J2, J3, J4
