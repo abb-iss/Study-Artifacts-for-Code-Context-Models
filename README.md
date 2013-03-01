@@ -3,7 +3,7 @@
 Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twelve developers performing one of three change tasks using the Eclipse IDE for Java Developers. Here we publish the data collected during this study.  Our data consists of twelve transcripts of developer actions transcribed by hand from the approximately two hours of video collected from each participant. It also includes the patches they submitted as solutions and a drawing/description of the program elements and relationships necessary to complete their task. Further details on the study setup can be found in our paper (preprint coming soon). 
 
 --
-### Download
+### Download: 
 To download our data, including transcripts, developer models, developer patches, and source code snapshots use Git to download this repository or [click on this link](https://github.com/abb-iss/Study-Artifacts-for-Code-Context-Models/archive/master.zip) for a .zip version.
 
 --
@@ -21,10 +21,10 @@ To download our data, including transcripts, developer models, developer patches
 --
 ## Example Developer Packet (R3)
 
-![Developer Model](R3 - Developer Model.jpg)
+![Developer Model](Rachota/R3 - Developer Model.jpg)
 A drawing or description of the program elements (e.g., methods, classes, fields) that the developer needed to understand in order to complete his/her task
 
-![Transcript in Excel](R3 - Transcript in Excel.PNG)
+![Transcript in Excel](Rachota/R3 - Transcript in Excel.PNG)
 Transcript of developer's actions when working (partial transcript shown here, entire transcript available in repository)
 
     diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
