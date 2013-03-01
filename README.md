@@ -19,6 +19,8 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 
 ![Developer Model](R3 - Developer Model.jpg)
 
+![Transcript in Excel](R3 - Transcript in Excel.PNG)
+
     diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
     index 51a4d70..243c8ab 100644
     --- a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
