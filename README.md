@@ -18,8 +18,10 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 ## Example Developer Packet
 
 ![Developer Model](R3 - Developer Model.jpg)
+Developer's model as she/he sees it
 
 ![Transcript in Excel](R3 - Transcript in Excel.PNG)
+Transcript of developer's actions when working
 
     diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
     index 51a4d70..243c8ab 100644
@@ -71,3 +73,5 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
          }
          
          public class MouseActionAdapter extends MouseAdapter implements ActionListener {
+
+Patch containing developers' changes
