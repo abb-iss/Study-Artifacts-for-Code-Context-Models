@@ -74,4 +74,4 @@ Transcript of developer's actions when working (partial transcript shown here, e
          
          public class MouseActionAdapter extends MouseAdapter implements ActionListener {
 
-A patch containing developers' changes
+A patch containing developer's changes
