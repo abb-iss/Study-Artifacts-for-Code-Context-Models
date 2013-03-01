@@ -15,7 +15,7 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 **Project:** [JPasswordSafe](http://sourceforge.net/projects/jpwsafe/), **Version:** 2.4, **Subjects:** J1, J2, J3, J4
 
 --
-## Example Developer Packet
+## Example Developer Packet (R3)
 
 ![Developer Model](R3 - Developer Model.jpg)
 Developer's model as she/he sees it
