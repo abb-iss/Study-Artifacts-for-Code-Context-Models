@@ -1,0 +1,292 @@
+diff --git a/FreeMind_integration/accessories/plugins/ExportWithXSLT.java b/FreeMind_integration/accessories/plugins/ExportWithXSLT.java
+index 8a336bf..a7af9bd 100644
+--- a/FreeMind_integration/accessories/plugins/ExportWithXSLT.java
++++ b/FreeMind_integration/accessories/plugins/ExportWithXSLT.java
+@@ -98,12 +98,14 @@
+ 			 if(model == null) 
+ 				 return; // there may be no map open
+ 			 if((model.getFile() == null) || model.isReadOnly()) {
+-				if(mc.save()) {
+-					export(model.getFile());
++				try {
++					if(mc.save()) {
++						export(model.getFile());
++					}
++					return;
++				} catch (IOException ioe) {
+ 					return;
+ 				}
+-				else
+-					return;
+ 			 }
+ 			 else
+ 				 export(model.getFile());
+diff --git a/FreeMind_integration/accessories/plugins/SaveAll.java b/FreeMind_integration/accessories/plugins/SaveAll.java
+index 2a111d0..4afb0a2 100644
+--- a/FreeMind_integration/accessories/plugins/SaveAll.java
++++ b/FreeMind_integration/accessories/plugins/SaveAll.java
+@@ -23,6 +23,7 @@
+  */
+ package accessories.plugins;
+ 
++import java.io.IOException;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.Vector;
+@@ -59,7 +60,13 @@
+             MapModule module = (MapModule) iter.next();
+             // change to module to display map properly.
+             mainController.getMapModuleManager().changeToMapModule(module.toString());
+-            if (!module.getModeController().save()) {
++            boolean saveSuccess;
++            try {
++            	saveSuccess = module.getModeController().save();
++            } catch (IOException e) {
++            	saveSuccess = false;
++            }
++            if (!saveSuccess) {
+                 // if not successfully, break the action.
+                 JOptionPane.showMessageDialog(getController().getFrame()
+                         .getContentPane(),
+diff --git a/FreeMind_integration/freemind/modes/ControllerAdapter.java b/FreeMind_integration/freemind/modes/ControllerAdapter.java
+index 72ee412..3603a6f 100644
+--- a/FreeMind_integration/freemind/modes/ControllerAdapter.java
++++ b/FreeMind_integration/freemind/modes/ControllerAdapter.java
+@@ -370,7 +370,7 @@
+     	return newModeController;
+     }
+     
+-    public boolean save() {
++    public boolean save() throws IOException {
+         if (getModel().isSaved()) return true;
+         if (getModel().getFile() == null || getModel().isReadOnly()) {
+            return saveAs(); }
+@@ -557,7 +557,7 @@
+      * Return false is the action was cancelled, e.g. when
+      * it has to lead to saving as.
+      */
+-    public boolean save(File file) {
++    public boolean save(File file) throws IOException {
+        return getModel().save(file); }
+ 
+     /** @return returns the new JMenuItem.*/
+@@ -678,7 +678,7 @@
+     /**
+      * Save as; return false is the action was cancelled
+      */
+-    public boolean saveAs() {
++    public boolean saveAs() throws IOException {
+     	File f;
+         JFileChooser chooser = getFileChooser();
+         if (getMapsParentFile() == null) {
+@@ -756,7 +756,12 @@
+             int returnVal = JOptionPane.showOptionDialog(getFrame().getContentPane(),text,title,JOptionPane.YES_NO_CANCEL_OPTION,
+                                                          JOptionPane.QUESTION_MESSAGE,null,null,null);
+             if (returnVal==JOptionPane.YES_OPTION) {
+-               boolean savingNotCancelled = save();
++               boolean savingNotCancelled;
++               try {
++            	   savingNotCancelled = save();
++               } catch (IOException e) {
++            	   savingNotCancelled = false;
++               }
+                if (!savingNotCancelled) {
+                	  return false; }}
+ 			else if ((returnVal==JOptionPane.CANCEL_OPTION) || (returnVal == JOptionPane.CLOSED_OPTION)) {
+@@ -966,7 +971,9 @@
+             mc = modeController;
+         }
+         public void actionPerformed(ActionEvent e) {
+-            boolean success = mc.save();
++            boolean success;
++            try {
++            	success = mc.save();
+             if (success) {
+ 				getFrame().out(getText("saved")); // perhaps... (PN)
+ 			} else {
+@@ -974,6 +981,11 @@
+ 				getFrame().out(message); 
+ 				getController().errorMessage(message);
+ 			}
++            } catch (IOException ioe) {
++            	String message = "Saving filed: " + ioe.getMessage();
++            	getFrame().out(message);
++            	getController().errorMessage(message);
++            }
+ 			getController().setTitle(); // Possible update of read-only
+         }
+     }
+@@ -985,7 +997,11 @@
+             mc = modeController;
+         }
+         public void actionPerformed(ActionEvent e) {
++        	try {
+             mc.saveAs();
++        	} catch (IOException ioe) {
++        		; // do nothing, because we do nothing when saveAs failed too
++        	}
+ 			getController().setTitle(); // Possible update of read-only
+         }
+     }
+diff --git a/FreeMind_integration/freemind/modes/MapAdapter.java b/FreeMind_integration/freemind/modes/MapAdapter.java
+index 4ef2fca..d95e9e6 100644
+--- a/FreeMind_integration/freemind/modes/MapAdapter.java
++++ b/FreeMind_integration/freemind/modes/MapAdapter.java
+@@ -92,7 +92,7 @@
+     // Abstract methods that _must_ be implemented.
+     //
+ 
+-    public abstract boolean save(File file);
++    public abstract boolean save(File file) throws IOException;
+ 
+     public abstract void load(URL file) throws FileNotFoundException, IOException, XMLParseException, URISyntaxException ;
+     public void load(File file) throws FileNotFoundException, IOException{
+diff --git a/FreeMind_integration/freemind/modes/ModeController.java b/FreeMind_integration/freemind/modes/ModeController.java
+index 44b2c3e..28fe182 100644
+--- a/FreeMind_integration/freemind/modes/ModeController.java
++++ b/FreeMind_integration/freemind/modes/ModeController.java
+@@ -74,13 +74,14 @@
+      * * another file.
+      */
+     void loadURL(String relative);
+-    boolean save(File file);
++    boolean save(File file) throws IOException;
+     MindMap newMap();
+     /**
+      * @return true, if successfully saved. False, if canceled or exception.
++     * @throws IOException 
+      */
+-    boolean save();
+-    boolean saveAs();
++    boolean save() throws IOException;
++    boolean saveAs() throws IOException;
+     void open();
+     boolean close(boolean force, MapModuleManager mapModuleManager);
+     /** Given a valid Xml parameterization of a node (tree),
+diff --git a/FreeMind_integration/freemind/modes/mindmapmode/EncryptedMindMapNode.java b/FreeMind_integration/freemind/modes/mindmapmode/EncryptedMindMapNode.java
+index 25e9d8e..0b17355 100644
+--- a/FreeMind_integration/freemind/modes/mindmapmode/EncryptedMindMapNode.java
++++ b/FreeMind_integration/freemind/modes/mindmapmode/EncryptedMindMapNode.java
+@@ -299,12 +299,9 @@
+     		return super.save(writer, registry, saveHidden, saveChildren);
+     	}
+         if (isDecrypted) {
+-        	if(!isAccessible()){
++        	if(!isAccessible())
+ 				throw new IOException(
+-						"Should store contents of encrypted node "
+-								+ this.getText()
+-								+ ", but it is not accessible.");
+-        	}
++						"Encrypted node: " + this.getText() + " must be accessible to save.");
+         	setStoringEncryptedContent(true);
+             try {
+ 				generateEncryptedContent(registry);
+diff --git a/FreeMind_integration/freemind/modes/mindmapmode/MindMapController.java b/FreeMind_integration/freemind/modes/mindmapmode/MindMapController.java
+index 6915613..57f9d24 100644
+--- a/FreeMind_integration/freemind/modes/mindmapmode/MindMapController.java
++++ b/FreeMind_integration/freemind/modes/mindmapmode/MindMapController.java
+@@ -1602,7 +1602,12 @@
+     public void loadURL(String relative) {
+         if (getMap().getFile() == null) {
+             getFrame().out("You must save the current map first!");
+-            boolean result = save();
++            boolean result;
++            try {
++            	result = save();
++            } catch (IOException ioe) {
++            	result = false;
++            }
+             // canceled??
+             if(!result) {
+                 return;
+diff --git a/FreeMind_integration/freemind/modes/mindmapmode/MindMapMapModel.java b/FreeMind_integration/freemind/modes/mindmapmode/MindMapMapModel.java
+index a9579ed..42a25a5 100644
+--- a/FreeMind_integration/freemind/modes/mindmapmode/MindMapMapModel.java
++++ b/FreeMind_integration/freemind/modes/mindmapmode/MindMapMapModel.java
+@@ -242,12 +242,12 @@
+     /**
+      * Return the success of saving
+      */
+-    public boolean save(File file) {
++    public boolean save(File file) throws IOException {
+         return saveInternal(file, false);
+     }
+ 
+     /** This method is intended to provide both normal save routines and saving of temporary (internal) files.*/
+-    private boolean saveInternal(File file, boolean isInternal) {
++    private boolean saveInternal(File file, boolean isInternal) throws IOException {
+         if (!isInternal && readOnly) { // unexpected situation, yet it's better to back it up
+             System.err.println("Attempt to save read-only map.");
+             return false; }
+@@ -271,6 +271,8 @@
+                 getFrame().getController().errorMessage(message);
+             else
+                 getFrame().out(message);
++        } catch(IOException e) {
++        	throw e;
+         } catch(Exception e) {
+             logger.severe("Error in MindMapMapModel.save(): ");
+             freemind.main.Resources.getInstance().logException(e);
+diff --git a/FreeMind_integration/freemind/modes/mindmapmode/actions/ExportBranchAction.java b/FreeMind_integration/freemind/modes/mindmapmode/actions/ExportBranchAction.java
+index b15d46a..008061b 100644
+--- a/FreeMind_integration/freemind/modes/mindmapmode/actions/ExportBranchAction.java
++++ b/FreeMind_integration/freemind/modes/mindmapmode/actions/ExportBranchAction.java
+@@ -22,6 +22,7 @@
+ 
+ import java.awt.event.ActionEvent;
+ import java.io.File;
++import java.io.IOException;
+ import java.net.MalformedURLException;
+ import java.net.URL;
+ 
+@@ -60,7 +61,11 @@
+         if (mMindMapController.getMap().getFile() == null) {
+             mMindMapController.getFrame().out(
+                     "You must save the current map first!");
++            try {
+             mMindMapController.save();
++            } catch (IOException ioe) {
++            	;
++            }
+         }
+ 
+         // Open FileChooser to choose in which file the exported
+@@ -134,7 +139,11 @@
+                     .createModeController();
+             MindMapMapModel map = new MindMapMapModel(node, mMindMapController
+                     .getFrame(), newModeController);
+-            map.save(chosenFile);
++            try {
++            	map.save(chosenFile);
++            } catch (IOException ioe) {
++            	;
++            }
+             // new node instead:
+             MindMapNode newNode = mMindMapController.addNewNode(parent,
+                     nodePosition, node.isLeft());
+diff --git a/FreeMind_integration/freemind/modes/schememode/SchemeController.java b/FreeMind_integration/freemind/modes/schememode/SchemeController.java
+index dc4a55d..9b48f0e 100644
+--- a/FreeMind_integration/freemind/modes/schememode/SchemeController.java
++++ b/FreeMind_integration/freemind/modes/schememode/SchemeController.java
+@@ -22,6 +22,7 @@
+ 
+ import java.awt.event.ActionEvent;
+ import java.io.File;
++import java.io.IOException;
+ import java.util.StringTokenizer;
+ 
+ import javax.swing.AbstractAction;
+@@ -88,7 +89,11 @@
+ 			//      if(!ext.equals(freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION_WITHOUT_DOT)) {
+ 			//          f = new File(f.getParent(),f.getName()+freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION);
+ 			//      }
+-			save(f);
++			try {
++				save(f);
++			} catch (IOException ioe) {
++				;
++			}
+ 			//Update the name of the map
+ 			updateMapModuleName();
+ 			return true;

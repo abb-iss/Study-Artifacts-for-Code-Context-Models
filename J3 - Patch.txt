@@ -1,0 +1,79 @@
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
+index e43aa6a..58ff198 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
+@@ -166,6 +166,8 @@
+ 	private UnlockDbAction unlockDbAction;
+ 	
+ 	private Table table;
++	private int tableTopIndex = 0;
++	private int[] tableSelection = null;
+ 	private SysTray systemTray; 
+ 	private Composite composite;
+ 	
+@@ -574,7 +576,21 @@
+ 		setPwsFile(file);
+ 		setReadOnly(forReadOnly);
+ 		if (true) // TODO (!openedFromMRU)
+-			UserPreferences.getInstance().setMostRecentFilename(fileName);
++			UserPreferences.getInstance().setMostRecentFilename(fileName);		
++	}
++
++	/**
++	 * Repositions the table back to how it was
++	 * before the app locked (e.g., through minimize
++	 * or timeout).
++	 */
++	public void repositionTable() {
++		if (!isTreeViewShowing()) {
++			table.setTopIndex(tableTopIndex);
++			if (tableSelection != null && tableSelection.length > 0) {
++				table.setSelection(tableSelection);
++			}
++		}
+ 	}
+ 
+ 	/**
+@@ -1504,10 +1520,13 @@
+ 	 * Clears the current view of all data.
+ 	 */
+ 	public void clearView() {
+-		if (isTreeViewShowing())
++		if (isTreeViewShowing()) {
+ 			tree.clearAll(true);
+-		else
+-			table.clearAll();		
++		} else {
++			tableTopIndex = table.getTopIndex();
++			tableSelection = table.getSelectionIndices();			
++			table.clearAll();
++		}
+ 	}
+ 
+ }
+\ No newline at end of file
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
+index 2b808c8..a215087 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
+@@ -69,7 +69,7 @@
+ 	    if (app.getPwsFile() != null) {
+ 		    log.info(Messages.getString("LockDbAction.Log.Locking")); //$NON-NLS-1$
+ 		    app.getPwsFile().dispose();
+-		    app.clearView();
++		    app.clearView();		    
+ 		    app.setPwsFile(null);
+ 		    app.setLocked(true);
+ 	    }
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/UnlockDbAction.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/UnlockDbAction.java
+index 9c70d26..437c32b 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/UnlockDbAction.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/UnlockDbAction.java
+@@ -62,6 +62,7 @@
+                 app.openFile(fileName, password); // readonly state stays unchanged
+                 isUnlocked = true;
+                 app.setLocked(false);
++                app.repositionTable();
+             } catch (Exception anEx) {
+                 app.displayErrorDialog(Messages.getString("LockDbAction.ReOpenError.Title"), Messages.getString("LockDbAction.ReOpenError.Message"), anEx); //$NON-NLS-1$ //$NON-NLS-2$
+             }

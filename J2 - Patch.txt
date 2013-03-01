@@ -1,0 +1,80 @@
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
+index e43aa6a..866cc32 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/PasswordSafeJFace.java
+@@ -671,6 +671,27 @@
+ 
+ 		return recordToCopy;
+ 	}
++	
++	protected void setSelectedRecord(PwsEntryBean bean) {
++		if (isTreeViewShowing()) {
++			return ; // NYI
++		}
++		
++		int i = 0;
++		for (TableItem ti : table.getItems()) {
++			PwsEntryBean entry = (PwsEntryBean) ti.getData();
++				if (entry.equals(bean)) {
++				break;
++			}
++			i++;
++		}
++		
++		if (i >=  getPwsDataStore().getSparseEntries().size()) {
++			throw new IllegalStateException();
++		}
++		
++		table.setSelection(i);
++	}
+ 
+ 	/**
+ 	 * Updates an existing record.
+@@ -788,6 +809,22 @@
+ 	 */
+ 	public void setLocked(final boolean isLocked) {
+ 		lockState.setLocked(isLocked);
++		if (!isTreeViewShowing()) {
++			if (!isLocked) {
++				restoreSelectedItem();
++			}
++		}
++	}
++	
++	protected PwsEntryBean lastSelected = null;
++	protected void saveSelectedItem() {
++		lastSelected = getSelectedRecord();
++	}
++	
++	protected void restoreSelectedItem() {
++		if (lastSelected != null) {
++		setSelectedRecord(lastSelected);
++		}
+ 	}
+ 
+     public LockState getLockStatus() {
+@@ -1506,8 +1543,10 @@
+ 	public void clearView() {
+ 		if (isTreeViewShowing())
+ 			tree.clearAll(true);
+-		else
+-			table.clearAll();		
++		else {
++			saveSelectedItem();
++			table.clearAll();
++		}
+ 	}
+ 
+ }
+\ No newline at end of file
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/dialog/EditDialog.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/dialog/EditDialog.java
+index aaf0968..b4658a4 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/dialog/EditDialog.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/dialog/EditDialog.java
+@@ -660,5 +660,5 @@
+         	int i = 0;
+         }
+     }
+-
++    
+ }

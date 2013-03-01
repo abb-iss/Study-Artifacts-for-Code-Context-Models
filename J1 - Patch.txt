@@ -1,0 +1,13 @@
+diff --git a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
+index 2b808c8..93ac2a0 100644
+--- a/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
++++ b/PasswordSafeSWT/src/org/pwsafe/passwordsafeswt/action/LockDbAction.java
+@@ -70,7 +70,7 @@
+ 		    log.info(Messages.getString("LockDbAction.Log.Locking")); //$NON-NLS-1$
+ 		    app.getPwsFile().dispose();
+ 		    app.clearView();
+-		    app.setPwsFile(null);
++//		    app.setPwsFile(null);
+ 		    app.setLocked(true);
+ 	    }
+     }

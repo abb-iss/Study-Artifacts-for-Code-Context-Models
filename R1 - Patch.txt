@@ -1,0 +1,78 @@
+diff --git a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
+index 51a4d70..d23dfd4 100644
+--- a/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
++++ b/Rachota/src/org/cesilko/rachota/gui/HistoryView.java
+@@ -26,6 +26,8 @@
+ import java.awt.Point;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
++import java.awt.event.FocusEvent;
++import java.awt.event.FocusListener;
+ import java.awt.event.MouseAdapter;
+ import java.awt.event.MouseEvent;
+ import java.beans.PropertyChangeEvent;
+@@ -41,6 +43,8 @@
+ import javax.swing.JPopupMenu;
+ import javax.swing.ListSelectionModel;
+ import javax.swing.SwingUtilities;
++import javax.swing.event.ChangeEvent;
++import javax.swing.event.ChangeListener;
+ import javax.swing.event.TreeSelectionEvent;
+ import javax.swing.tree.DefaultMutableTreeNode;
+ import javax.swing.tree.TreePath;
+@@ -159,6 +163,8 @@
+                 }
+             }
+         });
++  
++        
+         tbFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+         tbTasks.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+         cmbPeriod.addItem(Translator.getTranslation("HISTORYVIEW.PERIOD_" + SCALE_DAY));
+@@ -753,7 +759,9 @@
+         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+         pnTasks.add(pnTotalTime, gridBagConstraints);
++ 
+ 
++        
+         tpViews.addTab(Translator.getTranslation("HISTORYVIEW.TASKS_TAB_NAME"), pnTasks);
+ 
+         pnProjects.setFont(getFont());
+@@ -930,6 +938,21 @@
+         gridBagConstraints.weighty = 1.0;
+         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+         add(tpViews, gridBagConstraints);
++        
++        tpViews.addChangeListener(new ChangeListener(){
++
++			@Override
++			public void stateChanged(ChangeEvent arg0) {
++				if (jtProjects != null){
++					filterTasks();
++					updateTotalTime();
++					ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
++					model.setDays(getDays());
++					jtProjects.setSelectionRow(0);
++				}
++				
++			}});
++      
+     }// </editor-fold>//GEN-END:initComponents
+ 
+     private void rbTimeUsageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbTimeUsageActionPerformed
+@@ -1600,11 +1623,13 @@
+      * @param evt Event describing what was changed.
+      */
+     public void propertyChange(PropertyChangeEvent evt) {
++    	
+         FilteredTasksTableModel filteredTasksTableModel = (FilteredTasksTableModel) tbTasks.getModel();
+         filteredTasksTableModel.fireTableDataChanged();
+         txtFilteredTime.setText(Tools.getTime(filteredTasksTableModel.getTotalTime()));
+         historyChart.setDays(getDays());
+-        updateTotalTime();
++        ProjectsTreeModel model = (ProjectsTreeModel) jtProjects.getModel();
++       
+     }
+     
+     public class MouseActionAdapter extends MouseAdapter implements ActionListener {
