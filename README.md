@@ -6,8 +6,8 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 **Project:** [Rachota](http://sourceforge.net/projects/rachota/) **Version:** 2.4
 
 ## **Task:** [Save Failed - Data Loss Occurs - ID: 3420227](http://sourceforge.net/tracker/?func=detail&aid=3420227&group_id=7118&atid=107118)
-**Project:** [Freemind](http://sourceforge.net/projects/freemind/)
+**Project:** [Freemind](http://sourceforge.net/projects/freemind/) **Version:** 0.9.0 RC 15
 
 ## **Task:** [#30 list position lost after sleep](http://sourceforge.net/p/jpwsafe/bugs/30/)
-**Project:** [JPasswordSafe](http://sourceforge.net/projects/jpwsafe/) Version: 2.4
+**Project:** [JPasswordSafe](http://sourceforge.net/projects/jpwsafe/) **Version:** 2.4
 
