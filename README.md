@@ -14,3 +14,7 @@ Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twel
 ### **Task:** [#30 list position lost after sleep](http://sourceforge.net/p/jpwsafe/bugs/30/)
 **Project:** [JPasswordSafe](http://sourceforge.net/projects/jpwsafe/), **Version:** 2.4, **Subjects:** J1, J2, J3, J4
 
+--
+## Example Developer Packet
+
+![Developer Model](R3 - Developer Model.jpg)
