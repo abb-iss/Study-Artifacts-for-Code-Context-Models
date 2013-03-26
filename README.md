@@ -2,7 +2,7 @@
 
 Thomas Fritz, Christoph Bräunlich, and David Shepherd conducted a study of twelve developers performing one of three change tasks using the Eclipse IDE for Java Developers. Here we publish the data collected during this study.  Our data consists of twelve transcripts of developer actions transcribed by hand from the approximately two hours of video collected from each participant. It also includes the patches they submitted as solutions and a drawing/description of the program elements and relationships necessary to complete their task. Further details on the study setup can be found in our paper. 
 
-[Preprint: Supporting Search and Navigation through Code Context Models](http://www.merlin.uzh.ch/publication/show/7426)
+[Tech Report: Supporting Search and Navigation through Code Context Models](http://www.merlin.uzh.ch/publication/show/7426)
 
 --
 ### Download: 
